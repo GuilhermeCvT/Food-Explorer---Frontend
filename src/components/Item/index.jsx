@@ -33,7 +33,7 @@ export function Item({ item, ...rest }) {
                   <a><FiMinus /></a>
                   <span>01</span>
                   <a><FiPlus /></a>
-                  <Button title='Incluir'/>
+                  <Button title='Incluir' onClick={() => navigate(`/details/${item.id}`)}/>
                 </>
               )
             }

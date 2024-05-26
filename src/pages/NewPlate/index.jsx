@@ -12,7 +12,6 @@ import { api } from '../../services/api'
 
 export function NewPlate() {
   const [name, setName] = useState('')
-  const [image, setImage] = useState('')
   const [imageFile, setImageFile] = useState(null)
   const [category, setCategory] = useState('')
   const [description, setDescription] = useState('')
@@ -62,9 +61,6 @@ export function NewPlate() {
   function handleChangeImage(event) {
     const file = event.target.files[0]
     setImageFile(file)
-
-    const imagePreview = URL.createObjectURL(file)
-    setImage(imagePreview)
   }
 
   return (

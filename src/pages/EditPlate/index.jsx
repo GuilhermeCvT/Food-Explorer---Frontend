@@ -14,22 +14,18 @@ export function EditPlate() {
   const navigate = useNavigate()
   const params = useParams()
   const [name, setName] = useState('')
-  const [image, setImage] = useState('')
   const [imageFile, setImageFile] = useState(null)
   const [category, setCategory] = useState('')
   const [description, setDescription] = useState('')
   const [price, setPrice] = useState('')
-  const [plate, setPlate] = useState(null)
   const [ingredients, setIngredients] = useState([])
   const [newIngredient, setNewIngredient] = useState('')
 
   useEffect(() => {
     async function fetchPlate() {
-      setIngredients([])
-      setPlate(null)
       const response = await api.get(`plates/${params.id}`)
-      setPlate(response.data)
-
+      
+      setIngredients([])
       response.data.ingredients.map(ingredient => setIngredients(prevState => [...prevState, ingredient.name]))
       setName(response.data.name)
       setCategory(response.data.category)
@@ -45,7 +41,7 @@ export function EditPlate() {
 
     if(confirm) {
       await api.delete(`/plates/${params.id}`)
-      navigate(-1)
+      navigate('/')
     }
   }
 
@@ -66,28 +62,26 @@ export function EditPlate() {
       return alert('Escolha uma categoria')
 
     try{
-      await api.put(`/plates/${params.id}`, {name, category, description, price, ingredients})
+      const id = params.id
+      await api.put(`/plates/${id}`, {name, category, description, price, ingredients})
       
-      if (imageFile !== null) {
+      if (imageFile) {
         const fileUploadForm = new FormData()
         fileUploadForm.append('image', imageFile)
         
-        await api.patch(`/plates/image/${params.id}`, fileUploadForm)
+        await api.patch(`/plates/image/${id}`, fileUploadForm)
       }
 
       alert('Prato atualizado com sucesso')
       navigate('/')
     } catch(error) {
-      alert('Não foi possível editar o prato')
+      alert(error.response.data.message)
     }
   }
 
   function handleChangeImage(event) {
     const file = event.target.files[0]
     setImageFile(file)
-
-    const imagePreview = URL.createObjectURL(file)
-    setImage(imagePreview)
   }
 
   return (
@@ -133,10 +127,10 @@ export function EditPlate() {
           <div className="ingredients-div">
             <Label title='Ingredients'/>
             <div className="ingredients">
-              {ingredients.map(ingredient => (
+              {ingredients.map((ingredient, index) => (
                   <Ingredient 
                     title={ingredient} 
-                    key={ingredient.index} 
+                    key={index} 
                     disabled={true}
                     onClick={() => handleRemoveIngredient(ingredient)}/>
                 ))
