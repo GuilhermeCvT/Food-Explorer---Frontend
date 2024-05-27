@@ -33,7 +33,7 @@ export function SignIn() {
 
         <Button title='Entrar' onClick={handleSignIn}/>
 
-        <a href="/register">Criar uma conta</a>
+        <Link to="/register">Criar uma conta</Link>
       </Form>
     </Container>
   )
